@@ -25,21 +25,18 @@
     <script src="utils.js"></script>
     <script>
       $(document).ready(function() {
-          var str_song_list   = "<%= list_songs %>";
-          var str_prayer_list = "<%= list_prayers %>";
-
-          var list_songs      = str_song_list.split(",");
-          var list_prayers    = str_prayer_list.split(",");
-
-          for (id in list_prayers) {
-              prayer = list_prayers[id].split(".html")[0];
-              add_row("prayer", prayer);
-          }
-
-          for (id in list_songs) {
-              song = list_songs[id].split(".html")[0];
-              add_row("song", song);
-          }
+      var str_song_list   = "<%= list_songs %>";
+      var str_prayer_list = "<%= list_prayers %>";
+      var list_songs      = str_song_list.split(",");
+      var list_prayers    = str_prayer_list.split(",");
+      for (id in list_prayers) {
+        prayer = list_prayers[id].split(".html")[0];
+        add_row("prayer", prayer);
+      }
+      for (id in list_songs) {
+        song = list_songs[id].split(".html")[0];
+        add_row("song", song);
+      }
       });
     </script>
   </head>
@@ -48,10 +45,20 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
           <a class="navbar-brand" href="/">Home</a>
         </div>
-       <!--<a class="navbar-text" href="index.html">Index</a>-->
-      </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a id="title" href="#"></a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
     </nav>
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
