@@ -4,6 +4,10 @@ a.no-margin-left {
     margin-left: 0px;
 }
 
+a.margin-left {
+    margin-left: 20px;
+}
+
 span.bold {
     font-weight: bold;
 }

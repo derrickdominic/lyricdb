@@ -76,7 +76,9 @@ app.get("/daily", function(req, res) {
             }
             reading_html = reading_html
                 .replace(/href=\"\/bible\/readings\//g, "href=/\daily?date=")
-                .replace(/\.cfm"/g, "");
+                .replace(/\.cfm"/g, "")
+                .replace(/<h4>/g, "<br /><h5 style=\"font-weight:bold;\">")
+                .replace(/<\/h4>/g, "</h5><br />");
             reading_html = encodeURIComponent(reading_html);
             res.render("daily.html", {
                 day: day,
