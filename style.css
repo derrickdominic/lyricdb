@@ -1,0 +1,9 @@
+/* style.css */
+
+a.no-margin-left {
+    margin-left: 0px;
+}
+
+table.margin {
+    margin-top: 30px;
+}
