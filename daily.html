@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Daily Reading</title>
+    <title>Daily</title>
     <!-- Bootstrap -->
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -14,30 +14,36 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
           integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
           crossorigin="anonymous">
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
     <!-- personal stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- personal scripts -->
-    <!--<script src="script.js"></script>-->
+    <!--<script>
+    $(function(){
+      $("#content").load("dailys/Ave%20Maria.html");
+    });
+    </script>-->
   </head>
   <body>
     <!-- Navbar -->
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.html">Home</a>
+          <a class="navbar-brand" href="/">Home</a>
         </div>
-        <a class="navbar-text" href="index.html">Index</a>
+        <!--<a class="navbar-text" href="index.html">Index</a>
         <span class="navbar-brand">&gt;</span>
-        <a class="navbar-text no-margin-left" href="daily.html">Daily Reading</a>
+        <a class="navbar-text no-margin-left" href="daily.html">Daily</a>-->
       </div>
     </nav>
     <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <span>TODO</span>
+      <div class="col-md-8 col-md-offset-2 margin">
+        <div id="content">
+        </div>
       </div>
     </div>
   </body>

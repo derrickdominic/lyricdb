@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Index</title>
+    <title>Home</title>
     <!-- Bootstrap -->
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -14,43 +14,61 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
           integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
           crossorigin="anonymous">
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
     <!-- personal stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- personal scripts -->
-    <!--<script src="script.js"></script>-->
+    <script src="utils.js"></script>
+    <script>
+      $(document).ready(function() {
+          var str_song_list   = "<%= list_songs %>";
+          var str_prayer_list = "<%= list_prayers %>";
+
+          var list_songs      = str_song_list.split(",");
+          var list_prayers    = str_prayer_list.split(",");
+
+          for (id in list_prayers) {
+              prayer = list_prayers[id].split(".html")[0];
+              add_row("prayer", prayer);
+          }
+
+          for (id in list_songs) {
+              song = list_songs[id].split(".html")[0];
+              add_row("song", song);
+          }
+      });
+    </script>
   </head>
   <body>
     <!-- Navbar -->
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.html">Home</a>
+          <a class="navbar-brand" href="/">Home</a>
         </div>
-       <a class="navbar-text" href="index.html">Index</a>
+       <!--<a class="navbar-text" href="index.html">Index</a>-->
       </div>
     </nav>
     <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <!-- link to daily readings -->
-        <table class="table table-bordered">
-          <tr><td><a  href="daily.html">Daily Reading</a></td></tr>
-        </table>
-        <!-- (dynamic) table of prayers -->
-        <table class="table margin table-bordered table-striped">
-          <tr><th>Prayers</th></tr>
-          <tr><td><a href="prayer.html">Miracle Prayer</a></td></tr>
-          <tr><td><a href="prayer.html">Apostles' Creed</a></td></tr>
-        </table>
-        <!-- (dynamic) table of songs -->
-        <table class="table margin table-bordered table-striped">
-          <tr><th>Songs</th></tr>
-          <tr><td><a href="song.html">Ave Maria</a></td></tr>
-          <tr><td><a href="song.html">Christ Be Our Light</a></td></tr>
-        </table>
+      <div class="col-md-8 col-md-offset-2">
+        <div class="margin">
+          <!-- link to daily readings -->
+          <table class="table table-bordered">
+            <tr><td><a  href="/daily">Daily Reading</a></td></tr>
+          </table>
+          <!-- (dynamic) table of prayers -->
+          <table id="prayers" class="table margin table-bordered table-striped">
+            <tr><th>Prayers</th></tr>
+          </table>
+          <!-- (dynamic) table of songs -->
+          <table id="songs" class="table margin table-bordered table-striped">
+            <tr><th>Songs</th></tr>
+          </table>
+        </div>
       </div>
     </div>
   </body>

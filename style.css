@@ -4,6 +4,14 @@ a.no-margin-left {
     margin-left: 0px;
 }
 
+span.bold {
+    font-weight: bold;
+}
+
+div.margin {
+    margin: 10px;
+}
+
 table.margin {
     margin-top: 30px;
 }

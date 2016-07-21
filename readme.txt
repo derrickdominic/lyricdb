@@ -1,0 +1,2 @@
+- Install nodejs (via package manager)
+- npm install express
