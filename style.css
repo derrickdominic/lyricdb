@@ -29,3 +29,11 @@ nav {
 table.margin {
     margin-top: 30px;
 }
+
+table {
+    background: white;
+}
+
+body {
+    background-image: url("http://www.goodwp.com/images/201105/goodwp.com_18013.jpg");
+}
