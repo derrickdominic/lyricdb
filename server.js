@@ -82,27 +82,30 @@ app.get("/daily", function(req, res) {
         followAllRedirects: true,
         url:url
     }, function(error, response, html) {
-        if(!error) {
-            var $ = cheerio.load(html);
-            day = $("h1").text()
-            reading_html = $("#cs_control_3684").html()
-            // handle links to other readings
-            if (reading_html == null) {
-                console.log("nullified");
-            }
-            reading_html = reading_html
-                .replace(/href=\"\/bible\/readings\//g, "href=/\daily?date=")
-                .replace(/\.cfm"/g, "")
-                .replace(/<h4>/g, "<br /><h3 style=\"font-weight:bold;\">")
-                .replace(/<\/h4>/g, "</h3><br />");
-            reading_html = encodeURIComponent(reading_html);
-            res.render("daily.html", {
-                day: day,
-                reading: reading_html
-            });
+        if (error) {
+            console.error("request returned an error");
+            res.sendFile(path.join(__dirname+"/daily.html"));
             return;
         }
-        res.sendFile(path.join(__dirname+"/daily.html"));
+        var $ = cheerio.load(html);
+        day = $("h1").text()
+        reading_html = $("#cs_control_3684").html()
+        if (reading_html == null) {
+            console.error("reading_html was null");
+            res.sendFile(path.join(__dirname+"/daily.html"));
+            return;
+        }
+        // handle links to other readings
+        reading_html = reading_html
+            .replace(/href=\"\/bible\/readings\//g, "href=/\daily?date=")
+            .replace(/\.cfm"/g, "")
+            .replace(/<h4>/g, "<br /><h3 style=\"font-weight:bold;\">")
+            .replace(/<\/h4>/g, "</h3><br />");
+        reading_html = encodeURIComponent(reading_html);
+        res.render("daily.html", {
+            day: day,
+            reading: reading_html
+        });
     });
 });
 
