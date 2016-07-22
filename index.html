@@ -16,6 +16,10 @@
           crossorigin="anonymous">
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- Data Tables -->
+    <link rel="stylesheet" type="text/css"
+          href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
@@ -37,6 +41,8 @@
         song = list_songs[id].split(".txt")[0];
         add_row("song", song);
       }
+      $("#prayers").DataTable();
+      $("#songs").DataTable();
       });
     </script>
   </head>
@@ -68,12 +74,14 @@
             <tr><td><a style="font-weight:bold" href="/daily">Daily Reading</a></td></tr>
           </table>
           <!-- (dynamic) table of prayers -->
-          <table id="prayers" class="table margin">
-            <tr><th>Prayers</th></tr>
+          <table id="prayers" class="table">
+            <thead><tr><th>Prayers</th></tr></thead>
+            <tbody></tbody>
           </table>
           <!-- (dynamic) table of songs -->
-          <table id="songs" class="table margin">
-            <tr><th>Songs</th></tr>
+          <table id="songs" class="table">
+            <thead><tr><th>Songs</th></tr></thead>
+            <tbody></tbody>
           </table>
         </div>
       </div>

@@ -26,14 +26,14 @@ nav {
     font-size: large;
 }
 
-table.margin {
-    margin-top: 30px;
+body {
+    background: #D1D1D1;
 }
 
 table {
     background: white;
 }
 
-body {
-    background: #D1D1D1;
+div.dataTables_wrapper {
+    margin-top: 30px;
 }
