@@ -37,3 +37,7 @@ table {
 div.dataTables_wrapper {
     margin-top: 30px;
 }
+
+.form-control {
+    font-size: large;
+}
