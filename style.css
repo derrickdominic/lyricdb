@@ -4,8 +4,9 @@ a.no-margin-left {
     margin-left: 0px;
 }
 
-a.margin-left {
+a.books {
     margin-left: 20px;
+    text-transform: uppercase;
 }
 
 span.bold {
@@ -14,6 +15,15 @@ span.bold {
 
 div.margin {
     margin: 10px;
+}
+
+div#content {
+    font-size: large;
+    text-align: center;
+}
+
+nav {
+    font-size: large;
 }
 
 table.margin {
