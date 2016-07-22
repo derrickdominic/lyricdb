@@ -15,10 +15,10 @@ span.bold {
 
 div.margin {
     margin: 10px;
+    font-size: large;
 }
 
 div#content {
-    font-size: large;
     text-align: center;
 }
 
