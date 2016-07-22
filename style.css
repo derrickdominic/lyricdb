@@ -15,7 +15,7 @@ span.bold {
 
 div.margin {
     margin: 10px;
-    font-size: large;
+    font-size: medium;
 }
 
 div#content {
@@ -23,7 +23,7 @@ div#content {
 }
 
 nav {
-    font-size: large;
+    font-size: medium;
 }
 
 body {
@@ -39,5 +39,5 @@ div.dataTables_wrapper {
 }
 
 .form-control {
-    font-size: large;
+    font-size: medium;
 }
