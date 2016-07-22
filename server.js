@@ -16,10 +16,26 @@ var unescape_names = function(name) {
                .replace(/&#39;/g, '\'');
 };
 
+var to_html = function(words) {
+    html = "";
+    lines = words.split('\n');
+    for (id_line in lines) {
+        if (lines[id_line].match(/(Verse|Refrain|Chorus)/)) {
+            html = html +
+                "<span class=\"bold\">" + lines[id_line] + "</span><br />";
+        } else {
+            html = html +
+                "<span>" + lines[id_line] + "</span><br />";
+        }
+    }
+    return html;
+};
+
 var get_song_or_prayer = function(type, req, res) {
     var name = unescape_names(req.query.name);
     var words = fs.readFileSync(
-        type + "s/" + name + ".html", "utf-8");
+        type + "s/" + name + ".txt", "utf-8");
+    words = to_html(words);
     words = encodeURIComponent(words);
     res.render("song.html", {
         name: name,

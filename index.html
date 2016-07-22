@@ -30,11 +30,11 @@
       var list_songs      = str_song_list.split(",");
       var list_prayers    = str_prayer_list.split(",");
       for (id in list_prayers) {
-        prayer = list_prayers[id].split(".html")[0];
+        prayer = list_prayers[id].split(".txt")[0];
         add_row("prayer", prayer);
       }
       for (id in list_songs) {
-        song = list_songs[id].split(".html")[0];
+        song = list_songs[id].split(".txt")[0];
         add_row("song", song);
       }
       });
