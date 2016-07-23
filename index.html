@@ -38,15 +38,20 @@
       var list_songs      = str_song_list.split(",");
       var list_prayers    = str_prayer_list.split(",");
       for (id in list_prayers) {
-        prayer = list_prayers[id].split(".txt")[0];
-        add_row("prayer", prayer);
+      prayer = list_prayers[id].split(".txt")[0];
+      add_row("prayer", prayer);
       }
       for (id in list_songs) {
-        song = list_songs[id].split(".txt")[0];
-        add_row("song", song);
+      song = list_songs[id].split(".txt")[0];
+      add_row("song", song);
       }
-      $("#prayers").DataTable();
-      $("#songs").DataTable();
+      opts = {
+        paging: false
+      };
+      $("#prayers").DataTable(opts);
+      $("#songs").DataTable(opts);
+      // right align search bar
+      $(".dataTables_filter").parent().addClass("col-sm-12").removeClass("col-sm-6");
       });
     </script>
   </head>
@@ -72,7 +77,7 @@
     </nav>
     <div class="row">
       <div class="col-sm-10 col-sm-offset-1">
-        <div class="margin">
+        <div class="col-sm-12">
           <!-- link to daily readings -->
           <table class="table">
             <tr><td><a style="font-weight:bold" href="/daily">Daily Reading</a></td></tr>
@@ -81,17 +86,15 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-4 col-sm-offset-1">
-        <div class="margin">
+      <div class="col-sm-10 col-sm-offset-1">
+        <div class="col-sm-6">
           <!-- (dynamic) table of prayers -->
           <table id="prayers" class="table">
             <thead><tr><th>Prayers</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
-      </div>
-      <div class="col-sm-4 col-sm-offset-2">
-        <div class="margin">
+        <div class="col-sm-6">
           <!-- (dynamic) table of songs -->
           <table id="songs" class="table">
             <thead><tr><th>Songs</th></tr></thead>
@@ -100,5 +103,6 @@
         </div>
       </div>
     </div>
+    <br /><br /><br /><br />
   </body>
 </html>
