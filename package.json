@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/derrickdominic/lyricdb#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "cheerio": "^0.20.0",
     "ejs": "^2.4.2",
     "express": "^4.14.0",

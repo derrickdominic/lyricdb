@@ -4,16 +4,18 @@ var path    = require("path");
 var fs      = require("fs");
 var request = require('request');
 var cheerio = require('cheerio');
+var bodyParser = require('body-parser')
 
 app.set('views', __dirname);
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
-//app.use(express.static(__dirname));
+app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(express.static(__dirname));
 
 var unescape_names = function(name) {
     return name.replace('/&amp;/g', '&')
-               .replace(/&quot;/g, '"')
-               .replace(/&#39;/g, '\'');
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, '\'');
 };
 
 var to_html = function(words) {
@@ -55,6 +57,7 @@ var reading_date = function() {
 };
 
 app.get('/', function(req, res) {
+    console.log("GET /");
     var list_songs = fs.readdirSync("songs");
     var list_prayers = fs.readdirSync("prayers");
     //res.sendFile(path.join(__dirname+"/index.html"));
@@ -65,11 +68,50 @@ app.get('/', function(req, res) {
 });
 
 app.get("/song", function(req, res) {
+    console.log("GET /song");
     get_song_or_prayer("song", req, res);
 });
 
 app.get("/prayer", function(req, res) {
+    console.log("GET /prayer");
     get_song_or_prayer("prayer", req, res);
+});
+
+app.get("/new", function(req, res) {
+    console.log("GET /new");
+    res.render("new.html", {
+    });
+});
+
+app.get("/edit", function(req, res) {
+    console.log("GET /edit");
+    res.render("edit.html", {
+    });
+});
+
+app.post("/new", function(req, res) {
+    console.log("POST /new");
+    console.log(req.body);
+
+    if (req.body.title.length == 0) {
+        console.err("No title provided. Not creating file.");
+        res.redirect("/");
+    }
+    filename = req.body.type + "s/" + req.body.title + ".txt"
+    fs.writeFileSync(filename, req.body.text);
+    res.redirect("/");
+});
+
+app.post("/edit", function(req, res) {
+    console.log("POST /edit");
+    console.log(req.body);
+    res.redirect("/");
+});
+
+app.post("/delete", function(req, res) {
+    console.log("POST /delete");
+    console.log(req.body);
+    res.redirect("/");
 });
 
 app.get("/daily", function(req, res) {
@@ -84,7 +126,7 @@ app.get("/daily", function(req, res) {
     }, function(error, response, html) {
         if (error) {
             console.error("request returned an error");
-            res.sendFile(path.join(__dirname+"/daily.html"));
+            res.render("daily.html", {});
             return;
         }
         var $ = cheerio.load(html);

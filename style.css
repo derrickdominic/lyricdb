@@ -17,6 +17,10 @@ div.row {
     font-size: medium;
 }
 
+div.margin {
+    margin: 10px;
+}
+
 div#content {
     /*text-align: center;*/
 }
@@ -39,4 +43,8 @@ div.dataTables_wrapper {
 
 .form-control {
     font-size: medium;
+}
+
+input#title {
+    margin-bottom: 15px;
 }
