@@ -4,19 +4,15 @@ var path    = require("path");
 var fs      = require("fs");
 var request = require('request');
 var cheerio = require('cheerio');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+
+var utils = require('./utils.js');
 
 app.set('views', __dirname);
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static(__dirname));
-
-var unescape_titles = function(title) {
-    return title.replace('/&amp;/g', '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, '\'');
-};
 
 var to_html = function(text) {
     html = "";
@@ -34,7 +30,7 @@ var to_html = function(text) {
 };
 
 var get_song_or_prayer = function(type, req, res) {
-    var title = unescape_titles(req.query.title);
+    var title = utils.unescape(req.query.title);
     var text = fs.readFileSync(
         type + "s/" + title + ".txt", "utf-8");
     text = to_html(text);
@@ -102,13 +98,16 @@ app.post("/edit", function(req, res) {
     console.log(req.body);
 
     if (req.body.title.trim().length == 0) {
-        console.error("No title provided. Not creating file.");
+        console.error("No title provided. Not saving file.");
         res.redirect("/");
         return;
     }
     filename = req.body.type + "s/" + req.body.title + ".txt"
-    fs.writeFileSync(filename, req.body.text);
-    res.redirect("/");
+    var text = req.body.text;
+    text = text.replace(/\r/g, "");
+    text = decodeURIComponent(text);
+    fs.writeFileSync(filename, text);
+    res.redirect("/" + req.body.type + "?title=" + encodeURIComponent(req.body.title));
 });
 
 app.post("/delete", function(req, res) {
