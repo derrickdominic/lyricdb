@@ -12,15 +12,15 @@ app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static(__dirname));
 
-var unescape_names = function(name) {
-    return name.replace('/&amp;/g', '&')
+var unescape_titles = function(title) {
+    return title.replace('/&amp;/g', '&')
         .replace(/&quot;/g, '"')
         .replace(/&#39;/g, '\'');
 };
 
-var to_html = function(words) {
+var to_html = function(text) {
     html = "";
-    lines = words.split('\n');
+    lines = text.split('\n');
     for (id_line in lines) {
         if (lines[id_line].match(/(Verse|Refrain|Chorus)/)) {
             html = html +
@@ -34,14 +34,15 @@ var to_html = function(words) {
 };
 
 var get_song_or_prayer = function(type, req, res) {
-    var name = unescape_names(req.query.name);
-    var words = fs.readFileSync(
-        type + "s/" + name + ".txt", "utf-8");
-    words = to_html(words);
-    words = encodeURIComponent(words);
+    var title = unescape_titles(req.query.title);
+    var text = fs.readFileSync(
+        type + "s/" + title + ".txt", "utf-8");
+    text = to_html(text);
+    text = encodeURIComponent(text);
     res.render("song.html", {
-        name: name,
-        words: words
+        title: title,
+        text: text,
+        type: type
     });
 };
 
@@ -85,32 +86,41 @@ app.get("/new", function(req, res) {
 
 app.get("/edit", function(req, res) {
     console.log("GET /edit");
+    var text = fs.readFileSync(
+        req.query.type + "s/" + req.query.title + ".txt", "utf-8");
+    //text = to_html(text);
+    text = encodeURIComponent(text);
     res.render("edit.html", {
+        title: req.query.title,
+        type: req.query.type,
+        text: text
     });
 });
 
-app.post("/new", function(req, res) {
-    console.log("POST /new");
+app.post("/edit", function(req, res) {
+    console.log("POST /edit");
     console.log(req.body);
 
-    if (req.body.title.length == 0) {
-        console.err("No title provided. Not creating file.");
+    if (req.body.title.trim().length == 0) {
+        console.error("No title provided. Not creating file.");
         res.redirect("/");
+        return;
     }
     filename = req.body.type + "s/" + req.body.title + ".txt"
     fs.writeFileSync(filename, req.body.text);
     res.redirect("/");
 });
 
-app.post("/edit", function(req, res) {
-    console.log("POST /edit");
-    console.log(req.body);
-    res.redirect("/");
-});
-
 app.post("/delete", function(req, res) {
     console.log("POST /delete");
     console.log(req.body);
+    if (req.body.title.trim().length == 0) {
+        console.error("No title provided. Not deleting file.");
+        res.redirect("/");
+        return;
+    }
+    filename = req.body.type + "s/" + req.body.title + ".txt"
+    fs.unlinkSync(filename);
     res.redirect("/");
 });
 

@@ -24,6 +24,27 @@
     <script src="utils.js"></script>
     <link rel="stylesheet" href="style.css">
     <script>
+      var title = "<%= title %>";
+      var type = "<%= type %>";
+      var text = "<%= text %>";
+      var set_initial_vals = function() {
+        $("input#title").val(title);
+        if (type == "song") {
+          $("input#type_song").prop("checked", true);
+          $("input#type_prayer").prop("checked", false);
+        } else {
+          $("input#type_song").prop("checked", false);
+          $("input#type_prayer").prop("checked", true);
+        }
+      };
+      var set_delete_action = function() {
+        set_initial_vals();
+        $("form#form_edit").attr("action", "/delete");
+      };
+      $(document).ready(function() {
+        set_initial_vals();
+        $("textarea").val(decodeURIComponent(text));
+      });
     </script>
   </head>
   <body>
@@ -41,7 +62,7 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li><a id="title" href="#">Edit File</a></li>
+            <li><a id="title" href="#">Edit: <%= title %></a></li>
             <li><a id="home" href="/">Home</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
@@ -55,15 +76,15 @@
               <label for="title">Title</label>
               <input name="title" id="title" type="text" class="form-control">
             </div>
-            <div class="radio">
+            <div class="radio" style="display: none">
               <label>
                 <input type="radio" name="type" id="type_song" value="song">
                 Song
               </label>
             </div>
-            <div class="radio">
+            <div class="radio" style="display: none">
               <label>
-                <input type="radio" name="type" id="type_song" value="prayer">
+                <input type="radio" name="type" id="type_prayer" value="prayer">
                 Prayer
               </label>
             </div>
@@ -73,7 +94,7 @@
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-success btn-lg">Save</button>
-              <button type="submit" class="btn btn-danger pull-right btn-lg">Delete</button>
+              <button type="submit" onclick="set_delete_action()" class="btn btn-danger pull-right btn-lg">Delete</button>
             </div>
           </form>
         </div>
