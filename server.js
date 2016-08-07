@@ -6,13 +6,16 @@ var request = require('request');
 var cheerio = require('cheerio');
 var bodyParser = require('body-parser');
 
-var utils = require('./utils.js');
+require('./utils.js');
 
 app.set('views', __dirname);
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static(__dirname));
+
+// global state variables
+var last_song_file = "";
 
 var to_html = function(text) {
     html = "";
@@ -30,7 +33,7 @@ var to_html = function(text) {
 };
 
 var get_song_or_prayer = function(type, req, res) {
-    var title = utils.unescape(req.query.title);
+    var title = unescape(req.query.title);
     var text = fs.readFileSync(
         type + "s/" + title + ".txt", "utf-8");
     text = to_html(text);
@@ -67,6 +70,17 @@ app.get('/', function(req, res) {
 app.get("/song", function(req, res) {
     console.log("GET /song");
     get_song_or_prayer("song", req, res);
+});
+
+app.get("/random", function(req, res) {
+    console.log("GET /random");
+    var list_songs = fs.readdirSync("songs");
+    song_file = list_songs[Math.floor(Math.random()*list_songs.length)];
+    while (song_file == last_song_file)
+        song_file = list_songs[Math.floor(Math.random()*list_songs.length)];
+    last_song_file = song_file;
+    song = song_file.split(".txt")[0];
+    res.redirect("/song?title=" + encodeURIComponent(song));
 });
 
 app.get("/prayer", function(req, res) {
