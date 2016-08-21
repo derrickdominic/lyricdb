@@ -27,9 +27,13 @@
       $(document).ready(function() {
       var title = "<%= title %>";
       var text = "<%= text %>";
+      var type = "<%= type %>";
       document.title = title;
       $("#title").html(title);
       $("#text").html(decodeURIComponent(text));
+      if (type == "prayer") {
+        $("#random").hide();
+      }
       });
     </script>
   </head>
@@ -38,21 +42,11 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">back</a>
+          <a class="navbar-brand" id="home" href="/">Home</a>
+          <a class="navbar-brand" style="font-weight:bold" id="title" href="#"></a>
+          <a class="navbar-brand" id="edit" href="/edit?title=<%= title %>&type=<%= type %>">Edit</a>
+          <a class="navbar-brand" id="random" href="/random">Random</a>
         </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li><a id="title" href="#"></a></li>
-            <li><a id="edit" href="/edit?title=<%= title %>&type=<%= type %>">Edit</a></li>
-            <li><a id="home" href="/">Home</a></li>
-          </ul>
-        </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
     <div class="row">
