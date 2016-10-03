@@ -27,13 +27,14 @@
       $(document).ready(function() {
       var title = "<%= title %>";
       var text = "<%= text %>";
-      var type = "<%= type %>";
-      document.title = title;
-      $("#title").html(title);
-      $("#text").html(decodeURIComponent(text));
-      if (type == "prayer") {
-        $("#random").hide();
-      }
+      var type = "<%= type %>"; 
+	document.title = title;
+        $("#title").html(title); 
+	$("#text").html(decodeURIComponent(text)); 
+	//if(title == "I Thank God")
+	//{
+	//	$("#player").html('<iframe style="position:fixed" width="240px" height="135px" src="https://www.youtube.com/embed/jw6j0xp3uJw" frameborder="0" allowfullscreen></iframe>');
+	//}
       });
     </script>
   </head>
@@ -50,13 +51,11 @@
       </div><!-- /.container-fluid -->
     </nav>
     <div class="row">
-      <div class="col-sm-11 col-sm-offset-1">
+      <div class="col-sm-12">
         <div class="margin">
           <div id="text">
           </div>
           <br /><br /><br /><br />
         </div>
-      </div>
-    </div>
   </body>
 </html>
