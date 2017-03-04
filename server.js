@@ -83,7 +83,9 @@ app.get("/random", function(req, res) {
         song_file = list_songs[Math.floor(Math.random()*list_songs.length)];
     last_song_file = song_file;
     song = song_file.split(".txt")[0];
+    res.redirect("/song?title=" + encodeURIComponent(song));
 
+    /*
     var text = fs.readFileSync(
         "songs/" + song + ".txt", "utf-8");
     text = to_html(text);
@@ -93,6 +95,7 @@ app.get("/random", function(req, res) {
         text: text,
         type: "song"
     });
+    */
 });
 
 app.get("/prayer", function(req, res) {
