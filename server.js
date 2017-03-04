@@ -80,7 +80,16 @@ app.get("/random", function(req, res) {
         song_file = list_songs[Math.floor(Math.random()*list_songs.length)];
     last_song_file = song_file;
     song = song_file.split(".txt")[0];
-    res.redirect("/song?title=" + encodeURIComponent(song));
+
+    var text = fs.readFileSync(
+        "songs/" + song + ".txt", "utf-8");
+    text = to_html(text);
+    text = encodeURIComponent(text);
+    res.render("song.html", {
+        title: song,
+        text: text,
+        type: "song"
+    });
 });
 
 app.get("/prayer", function(req, res) {
@@ -142,6 +151,39 @@ app.get("/daily", function(req, res) {
     if (req.query.hasOwnProperty("date")) {
         date = req.query.date;
     }
+    var url = "http://www.usccb.org/bible/readings/" + date + ".cfm";
+    request({
+        followAllRedirects: true,
+        url:url
+    }, function(error, response, html) {
+        if (error) {
+            console.error("request returned an error");
+            res.render("daily.html", {});
+            return;
+        }
+        var $ = cheerio.load(html);
+        day = $("h1").text()
+        reading_html = $("#cs_control_3684").html()
+        if (reading_html == null) {
+            console.error("reading_html was null");
+            res.sendFile(path.join(__dirname+"/daily.html"));
+            return;
+        }
+        // handle links to other readings
+        reading_html = reading_html
+            .replace(/href=\"\/bible\/readings\//g, "href=/\daily?date=")
+            .replace(/\.cfm"/g, "")
+            .replace(/<h4>/g, "<br /><h3 style=\"font-weight:bold;\">")
+            .replace(/<\/h4>/g, "</h3><br />");
+        reading_html = encodeURIComponent(reading_html);
+        res.render("daily.html", {
+            day: day,
+            reading: reading_html
+        });
+    });
+});
+
+app.get("/gospel", function(req, res) {
     var url = "http://www.usccb.org/bible/readings/" + date + ".cfm";
     request({
         followAllRedirects: true,
