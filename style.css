@@ -1,20 +1,14 @@
 /* style.css */
 
-a.no-margin-left {
-    margin-left: 0px;
-}
-
-a.books {
-    margin-left: 20px;
-    text-transform: uppercase;
-}
-
-span.bold {
-    font-weight: bold;
-}
-
-div.row {
+body {
+    background: #d0d0d0;
     font-size: large;
+    overflow-x: hidden;
+}
+
+table {
+    background: white;
+    border: 1px solid #dddddd;
 }
 
 div.margin {
@@ -23,8 +17,28 @@ div.margin {
     margin-top: 5px;
 }
 
-div#text {
-    /*text-align: center;*/
+a {
+    text-decoration: none !important;
+    color: #216cb7;
+}
+
+a.books {
+    margin-left: 20px;
+    text-transform: uppercase;
+}
+
+/*
+a.no-margin-left {
+    margin-left: 0px;
+}
+
+
+span.bold {
+    font-weight: bold;
+}
+
+div.row {
+    font-size: large;
 }
 
 nav {
@@ -35,9 +49,6 @@ body {
     background: #D1D1D1;
 }
 
-table {
-    background: white;
-}
 
 div.dataTables_wrapper {
     margin-top: 30px;
@@ -50,3 +61,4 @@ div.dataTables_wrapper {
 input#title {
     margin-bottom: 15px;
 }
+*/

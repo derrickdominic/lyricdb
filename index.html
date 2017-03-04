@@ -11,18 +11,17 @@
           crossorigin="anonymous">
     <!-- Bootstrap Theme -->
     <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+          href="https://bootswatch.com/flatly/bootstrap.min.css"
           crossorigin="anonymous">
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <!-- Data Tables -->
     <link rel="stylesheet" type="text/css"
-          href="">
-    <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
@@ -32,30 +31,29 @@
     <script src="utils.js"></script>
     <script>
       var add_row = function(type, text) {
-        var encoded = encodeURIComponent(text)
-        $("#" + type + "s tbody")
-          .append("<tr><td><a href=/" + type + "?title=" + encoded +
-                  ">" + text + "</a></td></tr>")
+        var encoded = encodeURIComponent(text);
+        $("#" + type + "s tbody").append("<tr><td><h4><a href=/" +
+          type + "?title=" + encoded + ">" + text + "</a></h4></td></tr>")
       };
 
       $(document).ready(function() {
-        var str_song_list   = "<%= list_songs %>";
-        var str_prayer_list = "<%= list_prayers %>";
-        var list_songs      = str_song_list.split(",");
-        var list_prayers    = str_prayer_list.split(",");
-        for (id in list_prayers) {
-          prayer = list_prayers[id].split(".txt")[0];
-          add_row("prayer", prayer);
-        }
-        for (id in list_songs) {
-          song = list_songs[id].split(".txt")[0];
-          add_row("song", song);
-        }
-        opts = { paging: false };
-        $("#prayers").DataTable(opts);
-        $("#songs").DataTable(opts);
-        // right align search bar
-        $(".dataTables_filter").parent().addClass("col-sm-12").removeClass("col-sm-6");
+      var str_song_list   = "<%= list_songs %>";
+      var str_prayer_list = "<%= list_prayers %>";
+      var list_songs      = str_song_list.split(",");
+      var list_prayers    = str_prayer_list.split(",");
+      for (id in list_prayers) {
+      prayer = list_prayers[id].split(".txt")[0];
+      add_row("prayer", prayer);
+      }
+      for (id in list_songs) {
+      song = list_songs[id].split(".txt")[0];
+      add_row("song", song);
+      }
+      opts = { paging: false };
+      $("#prayers").DataTable(opts);
+      $("#songs").DataTable(opts);
+      // right align search bar
+      $(".dataTables_filter").parent().addClass("col-sm-12").removeClass("col-sm-6");
       });
     </script>
   </head>
@@ -65,45 +63,36 @@
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" id="new" href="new">Create</a>
-          <a class="navbar-brand" id="random" href="/random">Random</a>
         </div>
       </div><!-- /.container-fluid -->
     </nav>
     <div class="row">
       <div class="col-sm-10 col-sm-offset-1">
-        <div class="col-sm-12">
-          <!-- link to daily readings -->
-          <table class="table">
-            <tr><td><a style="font-weight:bold" href="/daily">Daily Reading</a></td></tr>
-          </table>
-        </div>
+        <!-- link to daily readings -->
+        <table class="table">
+          <tr><td><h4><a href="/daily">Daily Reading</a></h4></td></tr>
+        </table>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-10 col-sm-offset-1">
-        <div class="col-sm-12">
-          <table class="table">
-            <tr><td><a style="font-weight:bold" href="/random">Random Song</a></td></tr>
-          </table>
-        </div>
+        <table class="table">
+          <tr><td><h4><a href="/random">Random Song</a></h4></td></tr>
+        </table>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-10 col-sm-offset-1">
-        <div class="col-sm-12">
-          <!-- (dynamic) table of prayers -->
-          <table id="prayers" class="table">
-            <thead><tr><th>Prayers</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div class="col-sm-12">
-          <!-- (dynamic) table of songs -->
-          <table id="songs" class="table">
-            <thead><tr><th>Songs</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
+        <!-- (dynamic) table of prayers -->
+        <table id="prayers" class="table">
+          <thead><tr><th>Prayers</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <!-- (dynamic) table of songs -->
+        <table id="songs" class="table">
+          <thead><tr><th>Songs</th></tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
     <br /><br /><br /><br />
