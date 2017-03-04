@@ -6,8 +6,6 @@ var request = require('request');
 var cheerio = require('cheerio');
 var bodyParser = require('body-parser');
 
-require('./utils.js');
-
 app.set('views', __dirname);
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -17,6 +15,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // global state variables
 var last_song_file = "";
 
+var unescape = function(str) {
+    return str.replace(/&amp;/g, "&")
+        .replace(/&quot;/g, "\"")
+        .replace(/&#39;/g, "'");
+}
 var to_html = function(text) {
     html = "";
     lines = text.split('\n');
@@ -151,39 +154,6 @@ app.get("/daily", function(req, res) {
     if (req.query.hasOwnProperty("date")) {
         date = req.query.date;
     }
-    var url = "http://www.usccb.org/bible/readings/" + date + ".cfm";
-    request({
-        followAllRedirects: true,
-        url:url
-    }, function(error, response, html) {
-        if (error) {
-            console.error("request returned an error");
-            res.render("daily.html", {});
-            return;
-        }
-        var $ = cheerio.load(html);
-        day = $("h1").text()
-        reading_html = $("#cs_control_3684").html()
-        if (reading_html == null) {
-            console.error("reading_html was null");
-            res.sendFile(path.join(__dirname+"/daily.html"));
-            return;
-        }
-        // handle links to other readings
-        reading_html = reading_html
-            .replace(/href=\"\/bible\/readings\//g, "href=/\daily?date=")
-            .replace(/\.cfm"/g, "")
-            .replace(/<h4>/g, "<br /><h3 style=\"font-weight:bold;\">")
-            .replace(/<\/h4>/g, "</h3><br />");
-        reading_html = encodeURIComponent(reading_html);
-        res.render("daily.html", {
-            day: day,
-            reading: reading_html
-        });
-    });
-});
-
-app.get("/gospel", function(req, res) {
     var url = "http://www.usccb.org/bible/readings/" + date + ".cfm";
     request({
         followAllRedirects: true,

@@ -27,15 +27,15 @@ a.books {
     text-transform: uppercase;
 }
 
+span.bold {
+    font-weight: bold;
+}
+
 /*
 a.no-margin-left {
     margin-left: 0px;
 }
 
-
-span.bold {
-    font-weight: bold;
-}
 
 div.row {
     font-size: large;
