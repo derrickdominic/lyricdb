@@ -14,6 +14,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // global state variables
 var last_song_file = "";
+var shuffled_songs = null;
+var last_song_index = 0;
 
 var unescape = function(str) {
     return str.replace(/&amp;/g, "&")
@@ -59,6 +61,26 @@ var reading_date = function() {
     return today;
 };
 
+// http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+var shuffle = function(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
 app.get('/', function(req, res) {
     console.log("GET /");
     var list_songs = fs.readdirSync("songs");
@@ -77,12 +99,23 @@ app.get("/song", function(req, res) {
 
 app.get("/random", function(req, res) {
     console.log("GET /random");
-    var list_songs = fs.readdirSync("songs");
-    song_file = list_songs[Math.floor(Math.random()*list_songs.length)];
-    while (song_file == last_song_file)
-        song_file = list_songs[Math.floor(Math.random()*list_songs.length)];
+    if (shuffled_songs == null || (last_song_index + 1) >= shuffled_songs.length) {
+        var list_songs = fs.readdirSync("songs");
+        shuffled_songs = shuffle(list_songs);
+        last_song_index = 0;
+    } else {
+        last_song_index++;
+    }
+
+    song_file = shuffled_songs[last_song_index];
+    while (song_file == last_song_file) {
+        last_song_index++;
+        console.log("Next: " + last_song_index);
+        song_file = shuffled_songs[last_song_index];
+    }
     last_song_file = song_file;
     song = song_file.split(".txt")[0];
+
     res.redirect("/song?title=" + encodeURIComponent(song));
 
     /*
