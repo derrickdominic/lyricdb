@@ -1,54 +1,75 @@
-var express    = require("express");
+var express    = require('express');
 var app        = express();
-var path       = require("path");
-var fs         = require("fs");
+var path       = require('path');
+var fs         = require('fs');
 var request    = require('request');
 var cheerio    = require('cheerio');
 var bodyParser = require('body-parser');
 
 app.set('views', __dirname);
-// app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static(__dirname));
 
 // global state variables
-var last_song_file = "";
+var last_song_file = '';
 var shuffled_songs = null;
 var last_song_index = 0;
 
-var unescape = function(str) {
-    return str.replace(/&amp;/g, "&")
-        .replace(/&quot;/g, "\"")
-        .replace(/&#39;/g, "'");
-}
+var display_and_encoded_titles = function(display_title) {
+    return {
+        'display': display_title,
+        'encoded': encodeURIComponent(display_title)
+    };
+};
 
-var to_html = function(text) {
-    html = "";
-    lines = text.split('\n');
-    for (id_line in lines) {
-        if (lines[id_line].match(/(Verse|Refrain|Chorus)/)) {
-            html = html +
-                "<span class=\"bold\">" + lines[id_line] + "</span><br />";
+var create_title_dictionaries = function(files) {
+    var titles = []
+    for (index in files) {
+        var display_title = files[index].split(".txt")[0];
+        titles.push(display_and_encoded_titles(display_title));
+    }
+    return titles;
+};
+
+var add_bold_headings_and_line_breaks = function(content) {
+    html = '';
+    lines = content.split('\n');
+    for (index in lines) {
+        if (lines[index].match(/(Verse|Refrain|Chorus)/)) {
+            html = html + '<span class=\'bold\'>' + lines[index] + '</span><br />';
         } else {
-            html = html +
-                "<span>" + lines[id_line] + "</span><br />";
+            html = html + '<span>' + lines[index] + '</span><br />';
         }
     }
     return html;
 };
 
-var get_song_or_prayer = function(type, req, res) {
-    var title = unescape(req.query.title);
-    var text = fs.readFileSync(
-        type + "s/" + title + ".txt", "utf-8");
-    text = to_html(text);
-    text = encodeURIComponent(text);
-    res.render("song.html", {
-        title: title,
-        text: text,
+var render_song_or_prayer = function(type, req, res) {
+    var title = decodeURIComponent(req.query.title);
+    var content = fs.readFileSync(type + 's/' + title + '.txt', 'utf-8');
+    content = add_bold_headings_and_line_breaks(content);
+    res.render('song', {
+        title: display_and_encoded_titles(title),
+        content: content,
         type: type
     });
+};
+
+// http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+var shuffle = function(array) {
+    var current_index = array.length, temp, random_index;
+    // While there remain elements to shuffle...
+    while (0 !== current_index) {
+        // Pick a remaining element...
+        random_index = Math.floor(Math.random() * current_index);
+        current_index -= 1;
+        // And swap it with the current element.
+        temp = array[current_index];
+        array[current_index] = array[random_index];
+        array[random_index] = temp;
+    }
+    return array;
 };
 
 var reading_date = function() {
@@ -62,55 +83,28 @@ var reading_date = function() {
     return today;
 };
 
-// http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-var shuffle = function(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
-
-var display_and_encoded_titles = function(files) {
-    var titles = []
-    for (index in files) {
-        var display_title = files[index].split(".txt")[0];
-        titles.push({
-            "display": display_title,
-            "encoded": encodeURIComponent(display_title)
-        });
-    }
-    return titles;
-}
-
 app.get('/', function (req, res) {
-    console.log("GET /");
+    console.log('GET /');
     res.render('index', {
-        prayers: display_and_encoded_titles(fs.readdirSync("prayers")),
-        songs: display_and_encoded_titles(fs.readdirSync("songs"))
+        prayers: create_title_dictionaries(fs.readdirSync('prayers')),
+        songs: create_title_dictionaries(fs.readdirSync('songs'))
     });
 })
 
-app.get("/song", function(req, res) {
-    console.log("GET /song");
-    get_song_or_prayer("song", req, res);
+app.get('/song', function(req, res) {
+    console.log('GET /song');
+    render_song_or_prayer('song', req, res);
 });
 
-app.get("/random", function(req, res) {
-    console.log("GET /random");
+app.get('/prayer', function(req, res) {
+    console.log('GET /prayer');
+    render_song_or_prayer('prayer', req, res);
+});
+
+app.get('/random', function(req, res) {
+    console.log('GET /random');
     if (shuffled_songs == null || (last_song_index + 1) >= shuffled_songs.length) {
-        var list_songs = fs.readdirSync("songs");
+        var list_songs = fs.readdirSync('songs');
         shuffled_songs = shuffle(list_songs);
         last_song_index = 0;
     } else {
@@ -120,128 +114,108 @@ app.get("/random", function(req, res) {
     song_file = shuffled_songs[last_song_index];
     while (song_file == last_song_file) {
         last_song_index++;
-        console.log("Next: " + last_song_index);
+        console.log('Next: ' + last_song_index);
         song_file = shuffled_songs[last_song_index];
     }
     last_song_file = song_file;
-    song = song_file.split(".txt")[0];
+    song = song_file.split('.txt')[0];
 
-    res.redirect("/song?title=" + encodeURIComponent(song));
-
-    /*
-    var text = fs.readFileSync(
-        "songs/" + song + ".txt", "utf-8");
-    text = to_html(text);
-    text = encodeURIComponent(text);
-    res.render("song.html", {
-        title: song,
-        text: text,
-        type: "song"
-    });
-    */
+    res.redirect('/song?title=' + encodeURIComponent(song));
 });
 
-app.get("/prayer", function(req, res) {
-    console.log("GET /prayer");
-    get_song_or_prayer("prayer", req, res);
-});
-
-app.get("/new", function(req, res) {
-    console.log("GET /new");
-    res.render("new.html", {
-    });
-});
-
-app.get("/edit", function(req, res) {
-    console.log("GET /edit");
-    var text = fs.readFileSync(
-        req.query.type + "s/" + req.query.title + ".txt", "utf-8");
-    //text = to_html(text);
-    text = encodeURIComponent(text);
-    res.render("edit.html", {
-        title: req.query.title,
-        type: req.query.type,
-        text: text
-    });
-});
-
-app.post("/edit", function(req, res) {
-    console.log("POST /edit");
-    console.log(req.body);
-
-    if (req.body.title.trim().length == 0) {
-        console.error("No title provided. Not saving file.");
-        res.redirect("/");
-        return;
-    }
-    filename = req.body.type + "s/" + req.body.title + ".txt"
-    var text = req.body.text;
-    text = text.replace(/\r/g, "");
-    text = decodeURIComponent(text);
-    fs.writeFileSync(filename, text);
-    res.redirect("/" + req.body.type + "?title=" + encodeURIComponent(req.body.title));
-});
-
-app.post("/delete", function(req, res) {
-    console.log("POST /delete");
-    console.log(req.body);
-    if (req.body.title.trim().length == 0) {
-        console.error("No title provided. Not deleting file.");
-        res.redirect("/");
-        return;
-    }
-    filename = req.body.type + "s/" + req.body.title + ".txt"
-    fs.unlinkSync(filename);
-    res.redirect("/");
-});
-
-app.get("/daily", function(req, res) {
+app.get('/daily', function(req, res) {
     var date = reading_date();
-    if (req.query.hasOwnProperty("date")) {
+    if (req.query.hasOwnProperty('date')) {
         date = req.query.date;
     }
-    var url = "http://www.usccb.org/bible/readings/" + date + ".cfm";
+    var url = 'http://www.usccb.org/bible/readings/' + date + '.cfm';
     request({
         followAllRedirects: true,
         url:url
     }, function(error, response, html) {
         if (error) {
-            console.error("request returned an error");
-            res.render("daily.html", {});
+            console.error('request returned an error');
+            res.render('daily');
             return;
         }
         var $ = cheerio.load(html);
-        day = $("h1").text()
-//        reading_html = $("#cs_control_3684").html()
-        reading_html = $("#CS_Element_maincontent").html()
+        day = $('h1').text()
+        reading_html = $('#CS_Element_maincontent').html()
         if (reading_html == null) {
-            console.error("reading_html was null");
-            res.sendFile(path.join(__dirname+"/daily.html"));
+            console.error('reading_html was null');
+            res.render('daily');
             return;
         }
         // handle links to other readings
         reading_html = reading_html
-            .replace(/href=\"\/bible\/readings\//g, "href=/\daily?date=")
-            .replace(/\.cfm"/g, "")
-            .replace(/<h4>/g, "<br /><h3 style=\"font-weight:bold;\">")
-            .replace(/<\/h4>/g, "</h3><br />");
-        reading_html = encodeURIComponent(reading_html);
-        res.render("daily.html", {
+            .replace(/href=\'\/bible\/readings\//g, 'href=/\daily?date=')
+            .replace(/\.cfm'/g, '')
+            .replace(/<h4>/g, '<br /><h3 style=\'font-weight:bold;\'>')
+            .replace(/<\/h4>/g, '</h3><br />');
+        // reading_html = encodeURIComponent(reading_html);
+        res.render('daily', {
             day: day,
-            reading: reading_html
+            content: reading_html
         });
     });
 });
 
-app.get("/(*)\.css/", function(req, res) {
-    res.sendFile(path.join(__dirname+"/"+req.params[0]+".css"));
+app.get('/new', function(req, res) {
+    console.log('GET /new');
+    res.render('new');
 });
 
-app.get("/(*)\.js/", function(req, res) {
-    res.sendFile(path.join(__dirname+"/"+req.params[0]+".js"));
+app.get('/edit', function(req, res) {
+    console.log('GET /edit');
+    var text = fs.readFileSync(
+        req.query.type + 's/' + req.query.title + '.txt', 'utf-8');
+    //text = to_html(text);
+    text = encodeURIComponent(text);
+    res.render('edit', {
+        title: decodeURIComponent(req.query.title),
+        type: req.query.type,
+        text: text
+    });
+});
+
+app.post('/edit', function(req, res) {
+    console.log('POST /edit');
+    console.log(req.body);
+    if (req.body.title.trim().length == 0) {
+        console.error('No title provided. Not saving file.');
+        res.redirect('/');
+        return;
+    }
+    filename = req.body.type + 's/' + req.body.title + '.txt'
+    var text = req.body.text;
+    text = text.replace(/\r/g, '');
+    text = decodeURIComponent(text);
+    fs.writeFileSync(filename, text);
+    res.redirect('/' + req.body.type + '?title=' + encodeURIComponent(req.body.title));
+});
+
+app.post('/delete', function(req, res) {
+    console.log('POST /delete');
+    console.log(req.body);
+    if (req.body.title.trim().length == 0) {
+        console.error('No title provided. Not deleting file.');
+        res.redirect('/');
+        return;
+    }
+    filename = req.body.type + 's/' + req.body.title + '.txt'
+    fs.unlinkSync(filename);
+    res.redirect('/');
+});
+
+app.get('/(*)\.css/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/' + req.params[0] + '.css'));
+});
+
+app.get('/(*)\.js/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/' + req.params[0] + '.js'));
 });
 
 const port = 3000;
 app.listen(port);
 
-console.log("Running at port " + port + "...");
+console.log('Running at port ' + port + '...');

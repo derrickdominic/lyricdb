@@ -1,6 +1,6 @@
 html
   head
-    title Prayers and Songs
+    title Edit
     // Bootstrap CSS
     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
     // Optional Bootstrap theme
@@ -20,38 +20,36 @@ html
             span(class="icon-bar")
             span(class="icon-bar")
             span(class="icon-bar")
-          a(class="navbar-brand" href="#") Prayers and Songs
+          a(class="navbar-brand" href="#") Edit
         div(class="collapse navbar-collapse" id="bs-example-navbar-collapse-1")
           ul(class="nav navbar-nav")
-            li(class="active")
-              a(href="#") Home
-                span(class="sr-only") (current)
+            li
+              a(href="/") Home
             li
               a(href="/new") New
             li
               a(href="/daily") Daily Reading
             li
               a(href="/random") Random Song
-    div
-      div(class="col-md-1")
-      div(class="col-md-5")
-        table(class="table table-hover table-condensed")
-          thead
-            tr
-              th Prayers
-          tbody
-            each title in prayers
-              tr
-                td 
-                  a(href="/prayer?title=" + title.encoded) #{title.display}
-      div(class="col-md-5")
-        table(class="table table-hover table-condensed")
-          thead
-            tr
-              th Songs
-          tbody
-            each title in songs
-              tr
-                td 
-                  a(href="/song?title=" + title.encoded) #{title.display}
-      div(class="col-md-1")
+    div(class="row")
+      div(class="col-sm-10 col-sm-offset-1")
+        div(class="margin")
+          form(id="form_new" method="post" action="/edit" role="form")
+            div(class="form-group")
+              label(for="title") Title
+              input(name="title" id="title" type="text" class="form-control")
+            div(class="form-group")
+              div(class="radio-inline")
+                label
+                  input(type="radio" name="type" id="type_song" value="song" checked)
+                  p Song
+              div(class="radio-inline")
+                label
+                  input(type="radio" name="type" id="type_song" value="prayer") 
+                  p Prayer
+            div(class="form-group")
+              label(for="text") Text
+              textarea(name="text" id="text" class="form-control" rows="20")
+            div(class="form-group")
+              button(type="submit" class="btn btn-success btn-lg") Save
+              button(type="submit" onclick="set_delete_action()" class="btn btn-danger pull-right btn-lg") Delete

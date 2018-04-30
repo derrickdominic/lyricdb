@@ -1,15 +1,15 @@
 /* style.css */
 
-/*
 body {
-    background: #d0d0d0;
-    font-size: large;
-    overflow-x: hidden;
+    font-size: 12pt;
 }
 
-table {
-    background: white;
-    border: 1px solid #dddddd;
+span {
+    font-size: 14pt;
+}
+
+span.bold {
+    font-weight: bold;
 }
 
 div.margin {
@@ -17,48 +17,3 @@ div.margin {
     margin-right: 30px;
     margin-top: 5px;
 }
-
-a {
-    text-decoration: none !important;
-    color: #216cb7;
-}
-
-a.books {
-    margin-left: 20px;
-    text-transform: uppercase;
-}
-
-span.bold {
-    font-weight: bold;
-}
-
-a.no-margin-left {
-    margin-left: 0px;
-}
-
-
-div.row {
-    font-size: large;
-}
-
-nav {
-    font-size: large;
-}
-
-body {
-    background: #D1D1D1;
-}
-
-
-div.dataTables_wrapper {
-    margin-top: 30px;
-}
-
-.form-control {
-    font-size: large;
-}
-
-input#title {
-    margin-bottom: 15px;
-}
-*/
