@@ -1,9 +1,9 @@
-var express = require("express");
-var app     = express();
-var path    = require("path");
-var fs      = require("fs");
-var request = require('request');
-var cheerio = require('cheerio');
+var express    = require("express");
+var app        = express();
+var path       = require("path");
+var fs         = require("fs");
+var request    = require('request');
+var cheerio    = require('cheerio');
 var bodyParser = require('body-parser');
 
 app.set('views', __dirname);
@@ -22,6 +22,7 @@ var unescape = function(str) {
         .replace(/&quot;/g, "\"")
         .replace(/&#39;/g, "'");
 }
+
 var to_html = function(text) {
     html = "";
     lines = text.split('\n');
@@ -202,7 +203,8 @@ app.get("/daily", function(req, res) {
         }
         var $ = cheerio.load(html);
         day = $("h1").text()
-        reading_html = $("#cs_control_3684").html()
+//        reading_html = $("#cs_control_3684").html()
+        reading_html = $("#CS_Element_maincontent").html()
         if (reading_html == null) {
             console.error("reading_html was null");
             res.sendFile(path.join(__dirname+"/daily.html"));
