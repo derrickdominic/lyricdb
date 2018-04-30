@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 
 app.set('views', __dirname);
 app.set('view engine', 'pug');
+app.engine('html', require('ejs').renderFile);
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static(__dirname));
 
@@ -171,7 +172,7 @@ app.get('/edit', function(req, res) {
         req.query.type + 's/' + req.query.title + '.txt', 'utf-8');
     //text = to_html(text);
     text = encodeURIComponent(text);
-    res.render('edit', {
+    res.render('edit.html', {
         title: decodeURIComponent(req.query.title),
         type: req.query.type,
         text: text
