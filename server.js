@@ -7,8 +7,8 @@ var cheerio    = require('cheerio');
 var bodyParser = require('body-parser');
 
 app.set('views', __dirname);
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+// app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static(__dirname));
 
@@ -82,16 +82,25 @@ var shuffle = function(array) {
     return array;
 }
 
-app.get('/', function(req, res) {
+var display_and_encoded_titles = function(files) {
+    var titles = []
+    for (index in files) {
+        var display_title = files[index].split(".txt")[0];
+        titles.push({
+            "display": display_title,
+            "encoded": encodeURIComponent(display_title)
+        });
+    }
+    return titles;
+}
+
+app.get('/', function (req, res) {
     console.log("GET /");
-    var list_songs = fs.readdirSync("songs");
-    var list_prayers = fs.readdirSync("prayers");
-    //res.sendFile(path.join(__dirname+"/index.html"));
-    res.render("index.html", {
-        list_songs: list_songs,
-        list_prayers: list_prayers
+    res.render('index', {
+        prayers: display_and_encoded_titles(fs.readdirSync("prayers")),
+        songs: display_and_encoded_titles(fs.readdirSync("songs"))
     });
-});
+})
 
 app.get("/song", function(req, res) {
     console.log("GET /song");

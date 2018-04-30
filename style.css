@@ -1,5 +1,6 @@
 /* style.css */
 
+/*
 body {
     background: #d0d0d0;
     font-size: large;
@@ -31,7 +32,6 @@ span.bold {
     font-weight: bold;
 }
 
-/*
 a.no-margin-left {
     margin-left: 0px;
 }
