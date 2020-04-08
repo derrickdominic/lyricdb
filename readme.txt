@@ -8,3 +8,7 @@ Contributing
 - songs and prayers are .txt files in directories songs/ and prayers/
 - "Verse", "Refrain", and "Chorus" lines are automatically bolded
 - see existing songs and prayers for examples
+
+Notes
+- request is deprecated
+- core-js version < 3 no longer supported
